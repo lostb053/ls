@@ -85,6 +85,7 @@ async def last_fm_pic_(message: Message):
                 z.append(k)
         neutags = " #".join(z[i] for i in range(min(len(z), 4)))
         rep += f"\n#{neutags}" if neutags != "" else ""
+        await message.edit(rep)
     else:
         rep = f"**{qd}** was listening to ...\n"
         playcount = view_data.get("recenttracks").get("@attr").get("total")
@@ -94,7 +95,7 @@ async def last_fm_pic_(message: Message):
             rep += f"\n🎧  {artist_name} - {song_name}"
             rep += ", ♥️" if song_["loved"] != "0" else ""
         rep += f"`\n\nTotal Scrobbles = {playcount}`"
-    await message.edit(rep)
+        await message.edit(rep)
 
 
 @userge.on_cmd(
