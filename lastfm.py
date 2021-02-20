@@ -70,17 +70,14 @@ async def last_fm_pic_(message: Message):
         artist_name = song_["artist"]["name"]
         rep += f"🎧  <code>{artist_name} - {song_name}</code>"
         rep += ", ♥️" if song_["loved"] != "0" else ""
-        gt = (
-            await get_response(
-                {
-                    "method": "track.getInfo",
-                    "track": song_name,
-                    "artist": artist_name,
-                    "api_key": Config.LASTFM_API_KEY,
-                    "format": "json",
-                }
-            )
-        )[1]["track"]["toptags"]["tag"]
+        tgparam = {
+            "method": "track.getInfo",
+            "track": song_name,
+            "artist": artist_name,
+            "api_key": Config.LASTFM_API_KEY,
+            "format": "json",
+        }
+        gt = (await get_response(tgparam))[1]["track"]["toptags"]["tag"]
         y = [i.replace(" ", "_").replace("-", "_") for i in [tg["name"] for tg in gt]]
         z = []
         for k in y:
