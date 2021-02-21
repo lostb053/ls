@@ -206,7 +206,8 @@ async def last_fm_played_(message: Message):
         song_name = song_["name"]
         artist_name = song_["artist"]["name"]
         rep += f"\n🎧  {artist_name} - {song_name}"
-        rep += ", ♥️" if song_["loved"] != "0" else ""
+        if song_["loved"] != "0":
+            rep += ", ♥️"
     await message.edit(rep, disable_web_page_preview=True)
 
 
@@ -304,10 +305,10 @@ async def lastfm_compat_(message: Message):
     ta1 = (await get_response(UwU(us1)))[1]["topartists"]["artist"]
     ta2 = (await get_response(UwU(us2)))[1]["topartists"]["artist"]
     ad1, ad2 = [n["name"] for n in ta1], [n["name"] for n in ta2]
+    display = f"**{us1 if diff else await user()}** and **[{us2}]({du}{us2})**"
     comart = [value for value in ad2 if value in ad1]
     disartlst = {comart[r] for r in range(min(len(comart), 5))}
     disart = ", ".join(disartlst)
     compat = min((len(comart) * 100 / 40), 100)
-    display = f"**{us1 if diff else await user()}** and **[{us2}]({du}{us2})**"
     rep = f"{display} both listen to __{disart}__...\nMusic Compatibility is **{compat}%**"
     await message.edit(rep, disable_web_page_preview=True)
