@@ -289,25 +289,25 @@ async def lastfm_compat_(message: Message):
     def UwU(name):
         params["user"] = name
         return params
-
-    if not message.input_str:
-        return await message.edit("Please check `{tr}help Compat`")
-    msg = message.input_str
-    diff = "|" in msg
-    us1, us2 = msg.split("|") if diff else Config.LASTFM_USERNAME, msg
-    display = f"**{us1 if diff else await user()}** and **[{us2}]({du}{us2})**"
+    
     params={
         "method": "user.getTopArtists",
         "limit": 500,
         "api_key": Config.LASTFM_API_KEY,
         "format": "json",
     }
+    if not message.input_str:
+        return await message.edit("Please check `{tr}help Compat`")
+    msg = message.input_str
+    diff = "|" in msg
+    us1, us2 = msg.split("|") if diff else Config.LASTFM_USERNAME, msg
     ta1 = (await get_response(UwU(us1)))[1]["topartists"]["artist"]
     ta2 = (await get_response(UwU(us2)))[1]["topartists"]["artist"]
     ad1, ad2 = [n["name"] for n in ta1], [n["name"] for n in ta2]
     comart = [value for value in ad2 if value in ad1]
-    compat = min((len(comart) * 100 / 40), 100)
     disartlst = {comart[r] for r in range(min(len(comart), 5))}
     disart = ", ".join(disartlst)
+    compat = min((len(comart) * 100 / 40), 100)
+    display = f"**{us1 if diff else await user()}** and **[{us2}]({du}{us2})**"
     rep = f"{display} both listen to __{disart}__...\nMusic Compatibility is **{compat}%**"
     await message.edit(rep, disable_web_page_preview=True)
