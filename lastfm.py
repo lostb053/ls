@@ -86,12 +86,12 @@ async def last_fm_(message: Message):
         rep += f"\n#{neutags}" if neutags != "" else ""
     else:
         rep = f"**{qd}** was listening to ...\n"
-        playcount = view_data.get("recenttracks").get("@attr").get("total")
         for song_ in recent_song:
             song_name = song_["name"]
             artist_name = song_["artist"]["name"]
             rep += f"\n🎧  {artist_name} - {song_name}"
             rep += ", ♥️" if song_["loved"] != "0" else ""
+        playcount = view_data.get("recenttracks").get("@attr").get("total")
         rep += f"`\n\nTotal Scrobbles = {playcount}`"
     await message.edit(rep)
 
