@@ -69,10 +69,7 @@ async def last_fm_(message: Message):
         }
         gt = (await get_response(tgparam))[1]["track"]["toptags"]["tag"]
         y = [i.replace(" ", "_").replace("-", "_") for i in [tg["name"] for tg in gt]]
-        z = []
-        for k in y:
-            if k.lower() in tglst():
-                z.append(k)
+        z = [k for k in y if k.lower() in tglst()]
         neutags = " #".join(z[i] for i in range(min(len(z), 4)))
         img = recent_song[0].get("image")[3].get("#text")
         if img in ripimg():
@@ -112,9 +109,9 @@ async def last_fm_user_info_(message: Message):
         "api_key": Config.LASTFM_API_KEY,
         "format": "json",
     }
+    result = ""
     lastuser = (await get_response(params))[1]["user"]
     lastimg = lastuser.get("image")[3].get("#text")
-    result = ""
     result += f"[\u200c]({lastimg})" if lastimg else ""
     qd = f"[{query}]({du}{query})" if message.input_str else await user()
     result += f"LastFM User Info for **{qd}**:\n**User:** {query}\n"
@@ -230,13 +227,13 @@ async def last_fm_love_(message: Message):
     recent_song = (await get_response(params))[1]["recenttracks"]["track"]
     if len(recent_song) == 0 or not recent_song[0].get("@attr"):
         return await message.err("No Currently Playing Track found", del_in=10)
-    img = recent_song[0].get("image")[3].get("#text")
-    if img in ripimg():
-        img = rand(pcurl())
     song_ = recent_song[0]
     anm = song_["artist"]["#text"]
     snm = song_["name"]
     auth_().get_track(anm, snm).love()
+    img = song_.get("image")[3].get("#text")
+    if img in ripimg():
+        img = rand(pcurl())
     await message.edit(
         f"Loved currently playing track...\n`{anm} - {snm}` [\u200c]({img})"
     )
@@ -262,13 +259,13 @@ async def last_fm_unlove_(message: Message):
     recent_song = (await get_response(params))[1]["recenttracks"]["track"]
     if len(recent_song) == 0 or not recent_song[0].get("@attr"):
         return await message.err("No Currently Playing Track found", del_in=10)
-    img = recent_song[0].get("image")[3].get("#text")
-    if img in ripimg():
-        img = rand(pcurl())
     song_ = recent_song[0]
     anm = song_["artist"]["#text"]
     snm = song_["name"]
     auth_().get_track(anm, snm).unlove()
+    img = song_.get("image")[3].get("#text")
+    if img in ripimg():
+        img = rand(pcurl())
     await message.edit(
         f"UnLoved currently playing track...\n`{anm} - {snm}` [\u200c]({img})"
     )
