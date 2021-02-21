@@ -122,12 +122,10 @@ async def last_fm_user_info_(message: Message):
     qd = f"[{query}]({du}{query})" if message.input_str else await user()
     result += f"LastFM User Info for **{qd}**:\n**User:** {query}\n"
     name = lastuser.get("realname")
-    if name != "":
-        result += f"  🔰 **Name:** {name}\n"
+    result += f"  🔰 **Name:** {name}\n" if name != "" else ""
     result += f"  🎵 **Total Scrobbles:** {lastuser['playcount']}\n"
     country = lastuser.get("country")
-    if country != "None":
-        result += f"  🌍 **Country:** {country}\n"
+    result += f"  🌍 **Country:** {country}\n" if country != "None" else ""
     await message.edit(result)
 
 
@@ -211,8 +209,7 @@ async def last_fm_played_(message: Message):
         song_name = song_["name"]
         artist_name = song_["artist"]["name"]
         rep += f"\n🎧  {artist_name} - {song_name}"
-        if song_["loved"] != "0":
-            rep += ", ♥️"
+        rep += ", ♥️" if song_["loved"] != "0" else ""
     await message.edit(rep, disable_web_page_preview=True)
 
 
