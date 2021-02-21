@@ -69,10 +69,7 @@ async def last_fm_(message: Message):
         }
         gt = (await get_response(tgparam))[1]["track"]["toptags"]["tag"]
         y = [i.replace(" ", "_").replace("-", "_") for i in [tg["name"] for tg in gt]]
-        z = []
-        for k in y:
-            if k.lower() in tglst():
-                z.append(k)
+        z = [k for k in y if k.lower() in tglst()]
         neutags = " #".join(z[i] for i in range(min(len(z), 4)))
         img = recent_song[0].get("image")[3].get("#text")
         if img in ripimg():
@@ -82,15 +79,18 @@ async def last_fm_(message: Message):
         artist_name = song_["artist"]["name"]
         rep = f"""[\u200c]({img})**{qd}** is currently listening to:\n"
 🎧  <code>{artist_name} - {song_name}</code>"""
-        rep += ", ♥️" if song_["loved"] != "0" else ""
-        rep += f"\n#{neutags}" if neutags != "" else ""
+        if song_["loved"] != "0":
+            rep += ", ♥️"
+        if neutags != "":
+            rep += f"\n#{neutags}"
     else:
         rep = f"**{qd}** was listening to ...\n"
         for song_ in recent_song:
             song_name = song_["name"]
             artist_name = song_["artist"]["name"]
             rep += f"\n🎧  {artist_name} - {song_name}"
-            rep += ", ♥️" if song_["loved"] != "0" else ""
+            if song_["loved"] != "0":
+                rep += ", ♥️"
         playcount = view_data.get("recenttracks").get("@attr").get("total")
         rep += f"`\n\nTotal Scrobbles = {playcount}`"
     await message.edit(rep)
@@ -119,10 +119,12 @@ async def last_fm_user_info_(message: Message):
     qd = f"[{query}]({du}{query})" if message.input_str else await user()
     result += f"LastFM User Info for **{qd}**:\n**User:** {query}\n"
     name = lastuser.get("realname")
-    result += f"  🔰 **Name:** {name}\n" if name != "" else ""
+    if name != "":
+        result += f"  🔰 **Name:** {name}\n"
     result += f"  🎵 **Total Scrobbles:** {lastuser['playcount']}\n"
     country = lastuser.get("country")
-    result += f"  🌍 **Country:** {country}\n" if country != "None" else ""
+    if country != "None":
+        result += f"  🌍 **Country:** {country}\n"
     await message.edit(result)
 
 
