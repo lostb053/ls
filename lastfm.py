@@ -63,7 +63,6 @@ async def last_fm_(message: Message):
         song_ = recent_song[0]
         song_name = song_["name"]
         artist_name = song_["artist"]["name"]
-        img = recent_song[0].get("image")[3].get("#text")
         tgparam={
             "method": "track.getInfo",
             "track": song_name,
@@ -78,6 +77,7 @@ async def last_fm_(message: Message):
             if k.lower() in tglst():
                 z.append(k)
         neutags = " #".join(z[i] for i in range(min(len(z), 4)))
+        img = recent_song[0].get("image")[3].get("#text")
         if img in ripimg():
             img = rand(pcurl())
         rep = f"""[\u200c]({img})**{qd}** is currently listening to:\n"
