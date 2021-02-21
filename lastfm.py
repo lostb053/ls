@@ -60,9 +60,6 @@ async def last_fm_(message: Message):
         return await message.err("No Recent Tracks found", del_in=5)
     qd = f"[{query}]({du}{query})" if message.input_str else await user()
     if recent_song[0].get("@attr"):
-        song_ = recent_song[0]
-        song_name = song_["name"]
-        artist_name = song_["artist"]["name"]
         tgparam={
             "method": "track.getInfo",
             "track": song_name,
@@ -80,6 +77,9 @@ async def last_fm_(message: Message):
         img = recent_song[0].get("image")[3].get("#text")
         if img in ripimg():
             img = rand(pcurl())
+        song_ = recent_song[0]
+        song_name = song_["name"]
+        artist_name = song_["artist"]["name"]
         rep = f"""[\u200c]({img})**{qd}** is currently listening to:\n"
 🎧  <code>{artist_name} - {song_name}</code>"""
         rep += ", ♥️" if song_["loved"] != "0" else ""
