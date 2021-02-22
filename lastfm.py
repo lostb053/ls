@@ -92,7 +92,10 @@ async def last_fm_user_info_(message: Message):
     """user info"""
     if not await check_lastfmvar(message):
         return
-    lfmuser = message.input_str or Config.LASTFM_USERNAME
+    if message.input_str:
+        lfmuser = message.input_str
+    else:
+        lfmuser = Config.LASTFM_USERNAME
     await message.edit(f"<code>Getting info about last.fm User: {lfmuser}</code> ...")
     params = {
         "method": "user.getInfo",
